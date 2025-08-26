@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if form.instance.pk %}تعديل العرض{% else %}إضافة عرض جديد{% endif %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #FF7A30;
+            --secondary-color: #465C88;
+            --light-bg: #E9E3DF;
+            --dark-text: #000000;
+            --light-text: #5a5a5a;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--dark-text);
+        }
+        
+        .form-container {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 2rem auto;
+        }
+        
+        .form-header {
+            background: linear-gradient(135deg, var(--secondary-color), #3a4c72);
+            color: white;
+            padding: 1.5rem;
+        }
+        
+        .form-body {
+            background: white;
+            padding: 2rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(255, 122, 48, 0.15);
+        }
+        
+        .help-text {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-top: 0.4rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), #e66a20);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(255, 122, 48, 0.3);
+        }
+        
+        .btn-outline-secondary {
+            border-radius: 8px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+        }
+        
+        .image-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+            border: 2px dashed #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .offer-type-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .offer-type-card:hover, .offer-type-card.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(255, 122, 48, 0.05);
+        }
+        
+        .offer-type-card.selected {
+            background-color: rgba(255, 122, 48, 0.1);
+        }
+        
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .form-section-title {
+            color: var(--secondary-color);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            display: inline-block;
+        }
+        
+        .alert {
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+        }
+        
+        .alert-info {
+            background-color: rgba(70, 92, 136, 0.1);
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="form-container">
+                    <div class="form-header text-center">
+                        <h2 class="mb-0"><i class="bi bi-tag me-2"></i>{% if form.instance.pk %}تعديل العرض{% else %}إضافة عرض جديد{% endif %}</h2>
+                    </div>
+                    
+                    <div class="form-body">
+                        <form method="post" enctype="multipart/form-data" novalidate>
+                            {% csrf_token %}
+                            
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                    {% for error in form.non_field_errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            
+                            <div class="form-section">
+                                <h4 class="form-section-title">معلومات أساسية</h4>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.product.id_for_label }}" class="form-label">المنتج</label>
+                                        {{ form.product }}
+                                        {% if form.product.errors %}
+                                            <div class="text-danger mt-1">
+                                                {% for error in form.product.errors %}
+                                                    <i class="bi bi-x-circle-fill me-1"></i>{{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.title.id_for_label }}" class="form-label">عنوان العرض</label>
+                                        {{ form.title }}
+                                        {% if form.title.errors %}
+                                            <div class="text-danger mt-1">
+                                                {% for error in form.title.errors %}
+                                                    <i class="bi bi-x-circle-fill me-1"></i>{{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4 class="form-section-title">نوع العرض</h4>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="{{ form.offer_type.id_for_label }}" class="form-label">اختر نوع العرض</label>
+                                            {{ form.offer_type }}
+                                            {% if form.offer_type.errors %}
+                                                <div class="text-danger mt-1">
+                                                    {% for error in form.offer_type.errors %}
+                                                        <i class="bi bi-x-circle-fill me-1"></i>{{ error }}
+                                                    {% endfor %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6" id="discount-percentage-field">
+                                        <label for="{{ form.discount_percentage.id_for_label }}" class="form-label">نسبة الخصم (%)</label>
+                                        <div class="input-group">
+                                            {{ form.discount_percentage }}
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                        {% if form.discount_percentage.errors %}
+                                            <div class="text-danger mt-1">
+                                                {% for error in form.discount_percentage.errors %}
+                                                    <i class="bi bi-x-circle-fill me-1"></i>{{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="alert alert-info">
+                                            <i class="bi bi-info-circle-fill me-2"></i>
+                                            <strong>شرح أنواع العروض:</strong>
+                                            <ul class="mb-0 mt-2">
+                                                <li><strong>خصم بنسبة مئوية:</strong> تطبيق نسبة خصم على سعر المنتج</li>
+                                                <li><strong>اشترِ واحدة واحصل على واحدة مجانًا:</strong> عند شراء منتج واحد، تحصل على آخر مجانًا</li>
+                                                <li><strong>اشترِ واحدة واحصل على الثانية بنصف السعر:</strong> عند شراء منتجين، تدفع سعر المنتج الأول كاملاً والثاني بنصف السعر</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4 class="form-section-title">فترة العرض</h4>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.start_date.id_for_label }}" class="form-label">تاريخ البداية</label>
+                                        {{ form.start_date }}
+                                        {% if form.start_date.errors %}
+                                            <div class="text-danger mt-1">
+                                                {% for error in form.start_date.errors %}
+                                                    <i class="bi bi-x-circle-fill me-1"></i>{{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="{{ form.end_date.id_for_label }}" class="form-label">تاريخ النهاية</label>
+                                        {{ form.end_date }}
+                                        {% if form.end_date.errors %}
+                                            <div class="text-danger mt-1">
+                                                {% for error in form.end_date.errors %}
+                                                    <i class="bi bi-x-circle-fill me-1"></i>{{ error }}
+                                                {% endfor %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-section">
+                                <h4 class="form-section-title">صورة العرض</h4>
+                                <div class="mb-3">
+                                    <label for="{{ form.image.id_for_label }}" class="form-label">صورة العرض</label>
+                                    
+                                    {% if form.instance.image %}
+                                        <div class="mb-3 text-center">
+                                            <p class="form-label">الصورة الحالية:</p>
+                                            <img src="{{ form.instance.image.url }}" alt="صورة العرض الحالية" class="image-preview">
+                                        </div>
+                                        <div class="form-check mb-3">
+                                            <input class="form-check-input" type="checkbox" id="clear-image" name="image-clear">
+                                            <label class="form-check-label text-danger" for="clear-image">
+                                                حذف الصورة الحالية
+                                            </label>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div class="file-upload-area">
+                                        <input type="file" name="image" accept="image/*" class="form-control" id="{{ form.image.id_for_label }}">
+                                        <div class="help-text">{{ form.image.help_text }}</div>
+                                    </div>
+                                    
+                                    {% if form.image.errors %}
+                                        <div class="text-danger mt-1">
+                                            {% for error in form.image.errors %}
+                                                <i class="bi bi-x-circle-fill me-1"></i>{{ error }}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-4">
+                                <a href="{% url 'offer:offer-list' %}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-right me-1"></i> رجوع للقائمة
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    {% if form.instance.pk %}
+                                        <i class="bi bi-check2-circle me-1"></i> تحديث العرض
+                                    {% else %}
+                                        <i class="bi bi-plus-circle me-1"></i> إضافة العرض
+                                    {% endif %}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // إظهار/إخفاء حقل نسبة الخصم بناءً على نوع العرض
+        document.addEventListener('DOMContentLoaded', function() {
+            const offerTypeField = document.getElementById('{{ form.offer_type.id_for_label }}');
+            const discountPercentageField = document.getElementById('discount-percentage-field');
+            const discountInput = document.getElementById('{{ form.discount_percentage.id_for_label }}');
+            
+            function toggleDiscountField() {
+                if (offerTypeField.value === 'PERCENTAGE') {
+                    discountPercentageField.style.display = 'block';
+                    discountInput.setAttribute('required', 'required');
+                } else {
+                    discountPercentageField.style.display = 'none';
+                    discountInput.removeAttribute('required');
+                    discountInput.value = '';
+                }
+            }
+            
+            // التبديل عند التحميل وعند تغيير القيمة
+            toggleDiscountField();
+            offerTypeField.addEventListener('change', toggleDiscountField);
+            
+            // معاينة الصورة قبل الرفع
+            const imageInput = document.getElementById('{{ form.image.id_for_label }}');
+            if (imageInput) {
+                imageInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            // إزالة أي معاينات سابقة
+                            const existingPreviews = document.querySelectorAll('.image-preview-wrapper');
+                            existingPreviews.forEach(preview => preview.remove());
+                            
+                            // إنشاء عنصر المعاينة الجديد
+                            const previewWrapper = document.createElement('div');
+                            previewWrapper.className = 'image-preview-wrapper mt-3';
+                            
+                            const previewTitle = document.createElement('p');
+                            previewTitle.className = 'form-label';
+                            previewTitle.textContent = 'معاينة الصورة الجديدة:';
+                            
+                            const previewImage = document.createElement('img');
+                            previewImage.src = e.target.result;
+                            previewImage.className = 'image-preview';
+                            previewImage.alt = 'معاينة الصورة';
+                            
+                            previewWrapper.appendChild(previewTitle);
+                            previewWrapper.appendChild(previewImage);
+                            
+                            // إدراج المعاينة بعد حقل الرفع
+                            imageInput.parentNode.appendChild(previewWrapper);
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

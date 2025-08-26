@@ -1,0 +1,6 @@
+{% if user.is_authenticated %}
+    <p>مرحبًا {{ user.get_user_type_display }} - {{ user.phone_number }}</p>
+    <a href="{% url 'logout' %}">تسجيل الخروج</a>
+{% else %}
+    <a href="{% url 'login' %}">تسجيل الدخول</a>
+{% endif %}

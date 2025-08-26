@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل التأمين</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #FF7A30;
+            --secondary-color: #465C88;
+            --light-bg: #E9E3DF;
+            --dark-text: #000000;
+            --light-text: #5a5a5a;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .detail-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-top: 30px;
+        }
+        .detail-header {
+            background: linear-gradient(135deg, var(--secondary-color), #3a4c72);
+            color: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            margin: -30px -30px 30px -30px;
+        }
+        .insurance-logo {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        .detail-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        .btn-custom {
+            min-width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="detail-container">
+                    <div class="detail-header">
+                        <h3><i class="bi bi-info-circle"></i> تفاصيل التأمين</h3>
+                    </div>
+                    
+                    <div class="text-center mb-4">
+                        {% if insurance.insurance.image %}
+                        <img src="{{ insurance.insurance.image.url }}" class="insurance-logo" alt="{{ insurance.insurance.name }}">
+                        {% else %}
+                        <div class="insurance-logo d-flex align-items-center justify-content-center">
+                            <i class="bi bi-building text-secondary" style="font-size: 4rem;"></i>
+                        </div>
+                        {% endif %}
+                        <h3>{{ insurance.insurance.name }}</h3>
+                    </div>
+                    
+                    <div class="detail-list">
+                        <div class="detail-item d-flex justify-content-between">
+                            <strong>اسم شركة التأمين:</strong>
+                            <span>{{ insurance.insurance.name }}</span>
+                        </div>
+                        <div class="detail-item d-flex justify-content-between">
+                            <strong>الصيدلية المرتبطة:</strong>
+                            <span>{{ insurance.pharmacy.name }}</span>
+                        </div>
+                        <div class="detail-item d-flex justify-content-between">
+                            <strong>تاريخ الإضافة:</strong>
+                            <span>{{ insurance.created_at|date:"Y-m-d" }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{% url 'coverage:insurance-list' %}" class="btn btn-secondary btn-custom">
+                            <i class="bi bi-arrow-right"></i> رجوع للقائمة
+                        </a>
+                        <div>
+                            <a href="{% url 'coverage:insurance-update' insurance.pk %}" class="btn btn-primary btn-custom" style="background: linear-gradient(135deg, var(--primary-color), #e66a20); border: none;">
+                                <i class="bi bi-pencil"></i> تعديل
+                            </a>
+                            <a href="{% url 'coverage:insurance-delete' insurance.pk %}" class="btn btn-danger btn-custom">
+                                <i class="bi bi-trash"></i> حذف
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

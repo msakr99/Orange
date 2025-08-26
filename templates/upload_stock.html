@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رفع ملف Excel لبيانات المخزون</title>
+    <!-- إضافة Tailwind CSS عبر CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-color: #FF7A30;
+            --secondary-color: #465C88;
+            --light-bg: #E9E3DF;
+            --dark-text: #000000;
+            --light-text: #5a5a5a;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap');
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--light-bg);
+        }
+        .direction-rtl {
+            direction: rtl;
+        }
+    </style>
+</head>
+<body class="direction-rtl">
+    <div class="min-h-screen py-8 px-4">
+        <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
+            <!-- العنوان الرئيسي مع زر العودة -->
+            <div class="flex justify-between items-center mb-6">
+                <a href="{% url 'accounts:pharmacy_dashboard' %}" class="flex items-center text-[var(--primary-color)] hover:text-[#e66a20] transition-colors duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                    العودة للرئيسية
+                </a>
+                <h2 class="text-2xl font-bold text-center text-[var(--secondary-color)]">
+                    رفع ملف Excel لبيانات المخزون
+                </h2>
+                <div class="w-24"></div> <!-- عنصر موازنة للتخطيط -->
+            </div>
+
+            <!-- رسائل النظام -->
+            <div class="messages mb-4">
+                {% for message in messages %}
+                    <p class="p-3 rounded-lg text-center {% if message.tags == 'error' %}bg-red-100 text-red-700{% else %}bg-green-100 text-green-700{% endif %}">
+                        {{ message }}
+                    </p>
+                {% endfor %}
+            </div>
+
+            <!-- نموذج رفع الملف -->
+            <form method="POST" enctype="multipart/form-data" class="space-y-4">
+                {% csrf_token %}
+                <div class="space-y-2">
+                    <label class="block text-sm font-medium text-gray-700">اختر ملف Excel</label>
+                    <input type="file" name="excel_file" accept=".xlsx, .xls" class="block w-full text-sm text-gray-500
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-full file:border-0
+                        file:text-sm file:font-semibold
+                        file:bg-[#fef6f0] file:text-[var(--primary-color)]
+                        hover:file:bg-[#fdeada]
+                        border border-gray-300 rounded-md p-2
+                    " required>
+                </div>
+                
+                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[var(--primary-color)] hover:bg-[#e66a20] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--primary-color)]">
+                    رفع الملف
+                </button>
+            </form>
+
+            <!-- زر تحميل القالب -->
+            <div class="mt-6">
+                <a href="{% url 'store:download_stock_template' %}" class="w-full flex justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-[var(--secondary-color)] bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--secondary-color)]">
+                    تحميل ملف Excel فارغ
+                </a>
+            </div>
+
+            <!-- تنسيق الملف المطلوب -->
+            <div class="mt-8 pt-6 border-t border-gray-200">
+                <h3 class="text-lg font-medium text-[var(--secondary-color)]">تنسيق ملف Excel المطلوب</h3>
+                <p class="mt-2 text-sm text-gray-600">يجب أن يحتوي الملف على الأعمدة التالية:</p>
+                <ul class="mt-3 space-y-2">
+                    <li class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-[var(--primary-color)]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <p class="ml-2 text-sm text-gray-700"><strong>pharmacy_product_code</strong>: كود المنتج في الصيدلية</p>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-[var(--primary-color)]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <p class="ml-2 text-sm text-gray-700"><strong>quantity</strong>: الكمية</p>
+                    </li>
+                </ul>
+                <p class="mt-3 text-sm text-gray-600">
+                    <strong>ملاحظة:</strong> سيتم ربط البيانات تلقائياً بالصيدلية الخاصة بالمستخدم المسجل دخوله.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

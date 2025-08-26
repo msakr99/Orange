@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل صيدلية جديدة</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #E9E3DF;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #000000;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #FF7A30;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            padding: 15px 25px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+        .logo-img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h2 {
+            color: #465C88;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .header p {
+            color: #000000;
+            font-size: 16px;
+        }
+        .pharmacy-icon {
+            font-size: 50px;
+            color: #465C88;
+            margin-bottom: 15px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .full-width {
+            grid-column: span 2;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #000000;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: #465C88;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(70, 92, 136, 0.2);
+        }
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        button {
+            background-color: #FF7A30;
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #e06a25;
+        }
+        .errorlist {
+            color: #e74c3c;
+            margin: 5px 0;
+            padding: 0;
+            list-style-type: none;
+            font-size: 14px;
+        }
+        .messages {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 16px;
+        }
+        .login-link a {
+            color: #465C88;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+        .location-group {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .full-width {
+                grid-column: span 1;
+            }
+            .location-group {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+            .header h2 {
+                font-size: 24px;
+            }
+            .logo {
+                font-size: 20px;
+                padding: 12px 20px;
+            }
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        h3 {
+            color: #465C88;
+            border-bottom: 2px solid #465C88;
+            padding-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <div class="logo">
+                <!-- سيتم استبدال هذا بالشعار الفعلي عند رفعه -->
+                <span style="font-size: 32px; margin-left: 10px;">💊</span>
+                <span style="color: white; font-weight: bold;">Orange</span>
+            </div>
+        </div>
+        
+        <div class="header">
+            <h2>تسجيل صيدلية جديدة</h2>
+            <p>املأ النموذج أدناه لإنشاء حساب صيدلية جديد</p>
+        </div>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="messages {% if message.tags %}{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="post" id="pharmacyForm">
+            {% csrf_token %}
+            
+            <!-- إخفاء حقل user_type -->
+            {{ form.user_type }}
+            
+            <div class="form-grid">
+                <!-- معلومات المستخدم الأساسية -->
+                <div class="form-group full-width">
+                    <h3>معلومات المستخدم</h3>
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_phone_number" class="required">رقم الهاتف</label>
+                    {{ form.phone_number }}
+                    {% if form.phone_number.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.phone_number.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_full_name" class="required">الاسم الكامل</label>
+                    {{ form.full_name }}
+                    {% if form.full_name.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.full_name.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_password1" class="required">كلمة المرور</label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.password1.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_password2" class="required">تأكيد كلمة المرور</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.password2.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                
+                <!-- معلومات الصيدلية -->
+                <div class="form-group full-width">
+                    <h3 style="margin-top: 20px;">معلومات الصيدلية</h3>
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_name" class="required">اسم الصيدلية</label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.name.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_license_number" class="required">رقم الترخيص</label>
+                    {{ form.license_number }}
+                    {% if form.license_number.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.license_number.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                
+                <!-- الموقع -->
+                <div class="form-group full-width location-group">
+                    <div>
+                        <label for="id_governorate" class="required">المحافظة</label>
+                        {{ form.governorate }}
+                        {% if form.governorate.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.governorate.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        <label for="id_district" class="required">المنطقة</label>
+                        <select id="id_district" name="district" required>
+                            <option value="">اختر المنطقة</option>
+                            <!-- سيتم ملء الخيارات عبر JavaScript -->
+                        </select>
+                        {% if form.district.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.district.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        <div id="districtLoading" style="display: none; color: #465C88; margin-top: 5px;">
+                            <span class="loading"></span> جاري التحميل...
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="id_village" class="required">ال القرية</label>
+                        <select id="id_village" name="village" required>
+                            <option value="">اختر القرية</option>
+                            <!-- سيتم ملء الخيارات عبر JavaScript -->
+                        </select>
+                        {% if form.village.errors %}
+                            <ul class="errorlist">
+                                {% for error in form.village.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                        <div id="villageLoading" style="display: none; color: #465C88; margin-top: 5px;">
+                            <span class="loading"></span> جاري التحميل...
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="id_address" class="required">العنوان التفصيلي</label>
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.address.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <button type="submit" id="submitBtn">تسجيل الصيدلية</button>
+        </form>
+        
+        <div class="login-link">
+            <p>لديك حساب بالفعل؟ <a href="{% url 'accounts:login' %}">تسجيل الدخول</a></p>
+        </div>
+    </div>
+
+    <script>
+        // دالة مساعدة للتحقق من صحة JSON
+        function parseJSON(response) {
+            return response.text().then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (err) {
+                    throw new Error('استجابة غير صالحة من الخادم');
+                }
+            });
+        }
+
+        // دالة مساعدة للتعامل مع أخطاء الشبكة
+        function handleFetchError(error) {
+            console.error('خطأ في الشبكة:', error);
+            alert('حدث خطأ في الاتصال بالخادم. يرجى المحاولة مرة أخرى.');
+        }
+
+        // إضافة تحقق من صحة رقم الهاتف
+        document.getElementById('id_phone_number').addEventListener('blur', function() {
+            const phone = this.value.trim();
+            const phoneRegex = /^[0-9+]{8,15}$/;
+            
+            if (phone && !phoneRegex.test(phone)) {
+                alert('يرجى إدخال رقم هاتف صحيح (أرقام فقط، من 8 إلى 15 رقم)');
+            }
+        });
+        
+        // تحقق من تطابق كلمتي المرور
+        document.getElementById('pharmacyForm').addEventListener('submit', function(e) {
+            const password1 = document.getElementById('id_password1').value;
+            const password2 = document.getElementById('id_password2').value;
+            
+            if (password1 !== password2) {
+                e.preventDefault();
+                alert('كلمتا المرور غير متطابقتين. يرجى التأكد من تطابقهما.');
+                return;
+            }
+            
+            // التحقق من أن جميع الحقول المطلوبة مملوءة
+            const requiredFields = this.querySelectorAll('[required]');
+            let allFilled = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    allFilled = false;
+                    field.style.borderColor = '#e74c3c';
+                } else {
+                    field.style.borderColor = '#ddd';
+                }
+            });
+            
+            if (!allFilled) {
+                e.preventDefault();
+                alert('يرجى ملء جميع الحقول المطلوبة');
+            }
+        });
+        
+        // تحديث قائمة المناطق عند تغيير المحافظة
+        document.getElementById('id_governorate').addEventListener('change', function() {
+            const governorateId = this.value;
+            const districtSelect = document.getElementById('id_district');
+            const villageSelect = document.getElementById('id_village');
+            const districtLoading = document.getElementById('districtLoading');
+            
+            // إعادة تعيين قائمة المناطق والقرى
+            districtSelect.innerHTML = '<option value="">اختر المنطقة</option>';
+            villageSelect.innerHTML = '<option value="">اختر القرية</option>';
+            
+            if (governorateId) {
+                districtLoading.style.display = 'block';
+                
+                // جلب المناطق المتعلقة بالمحافظة المحددة
+                fetch(`/accounts/get-districts/?governorate_id=${governorateId}`)
+                    .then(parseJSON)
+                    .then(data => {
+                        if (data.districts && data.districts.length > 0) {
+                            data.districts.forEach(district => {
+                                const option = document.createElement('option');
+                                option.value = district.id;
+                                option.textContent = district.name;
+                                districtSelect.appendChild(option);
+                            });
+                        } else {
+                            districtSelect.innerHTML = '<option value="">لا توجد مناطق متاحة</option>';
+                        }
+                    })
+                    .catch(handleFetchError)
+                    .finally(() => {
+                        districtLoading.style.display = 'none';
+                    });
+            } else {
+                districtLoading.style.display = 'none';
+            }
+        });
+        
+        // تحديث قائمة القرى عند تغيير المنطقة
+        document.getElementById('id_district').addEventListener('change', function() {
+            const districtId = this.value;
+            const villageSelect = document.getElementById('id_village');
+            const villageLoading = document.getElementById('villageLoading');
+            
+            // إعادة تعيين قائمة القرى
+            villageSelect.innerHTML = '<option value="">اختر القرية</option>';
+            
+            if (districtId) {
+                villageLoading.style.display = 'block';
+                
+                // جلب القرى المتعلقة بالمنطقة المحددة
+                fetch(`/accounts/get-villages/?district_id=${districtId}`)
+                    .then(parseJSON)
+                    .then(data => {
+                        if (data.villages && data.villages.length > 0) {
+                            data.villages.forEach(village => {
+                                const option = document.createElement('option');
+                                option.value = village.id;
+                                option.textContent = village.name;
+                                villageSelect.appendChild(option);
+                            });
+                        } else {
+                            villageSelect.innerHTML = '<option value="">لا توجد قرى متاحة</option>';
+                        }
+                    })
+                    .catch(handleFetchError)
+                    .finally(() => {
+                        villageLoading.style.display = 'none';
+                    });
+            } else {
+                villageLoading.style.display = 'none';
+            }
+        });
+
+        // تحميل المناطق عند تحميل الصفحة إذا كانت المحافظة محددة مسبقاً
+        document.addEventListener('DOMContentLoaded', function() {
+            const governorateSelect = document.getElementById('id_governorate');
+            if (governorateSelect.value) {
+                // تشغيل حدث change لتحميل المناطق المرتبطة
+                const event = new Event('change');
+                governorateSelect.dispatchEvent(event);
+            }
+        });
+    </script>
+</body>
+</html>

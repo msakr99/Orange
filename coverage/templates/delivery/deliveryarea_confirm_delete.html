@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حذف منطقة التوصيل - نظام الصيدليات</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #FF7A30;
+            --secondary-color: #465C88;
+            --light-bg: #E9E3DF;
+            --dark-text: #000000;
+            --light-text: #5a5a5a;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            padding: 20px;
+            color: var(--dark-text);
+        }
+        
+        .header-section {
+            background: linear-gradient(135deg, var(--primary-color), #e66a20);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .card-custom {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color), #e66a20);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: white;
+        }
+        
+        .btn-primary-custom:hover {
+            background: linear-gradient(135deg, #e66a20, var(--primary-color));
+            color: white;
+        }
+        
+        .navbar-custom {
+            background: linear-gradient(135deg, var(--primary-color), #e66a20);
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .user-welcome {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .alert-warning {
+            border-radius: 10px;
+            border: none;
+            background-color: #fff3cd;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- شريط التنقل -->
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <i class="bi bi-prescription2"></i> نظام الصيدليات
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'coverage:delivery-areas' %}"><i class="bi bi-truck"></i> مناطق التوصيل</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'coverage:insurance-list' %}"><i class="bi bi-shield-check"></i> شركات التأمين</a>
+                        </li>
+                    </ul>
+                    <div class="d-flex">
+                        <span class="navbar-text me-3">
+                            <i class="bi bi-person-circle"></i> 
+                            {{ user.username }} - {{ user.pharmacy.name }}
+                        </span>
+                        <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">
+                            <i class="bi bi-box-arrow-right"></i> تسجيل خروج
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- قسم الترحيب بالمستخدم -->
+        <div class="header-section">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2><i class="bi bi-prescription2"></i> نظام إدارة الصيدلية</h2>
+                    <p class="mb-0">مرحباً بك في نظام إدارة الصيدلية الخاص بك</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="user-welcome">
+                        <h5 class="mb-1">{{ user.pharmacy.name }}</h5>
+                        <p class="text-muted mb-0">{{ user.username }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- محتوى الصفحة -->
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card card-custom">
+                    <div class="card-header" style="background: linear-gradient(135deg, var(--secondary-color), #3a4c72); color: white;">
+                        <h4 class="card-title">
+                            <i class="bi bi-exclamation-triangle"></i> تأكيد الحذف
+                        </h4>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="alert alert-warning">
+                            <h5><i class="bi bi-exclamation-circle"></i> هل أنت متأكد من الحذف؟</h5>
+                            <p>سيتم حذف منطقة التوصيل لقرية <strong>{{ object.village.name }}</strong> بشكل نهائي.</p>
+                        </div>
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="d-flex justify-content-center">
+                                <a href="{% url 'coverage:delivery-areas' %}" class="btn btn-secondary me-2">
+                                    <i class="bi bi-arrow-right"></i> إلغاء
+                                </a>
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-trash"></i> نعم، احذف
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

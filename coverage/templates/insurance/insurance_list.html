@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قائمة شركات التأمين</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #FF7A30;
+            --secondary-color: #465C88;
+            --light-bg: #E9E3DF;
+            --dark-text: #000000;
+            --light-text: #5a5a5a;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .header {
+            background: linear-gradient(135deg, var(--secondary-color), #3a4c72);
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-radius: 0 0 10px 10px;
+            position: relative;
+        }
+        .home-btn {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+        }
+        .insurance-card {
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 20px;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .insurance-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .insurance-img {
+            height: 120px;
+            object-fit: contain;
+            background-color: #f8f9fa;
+            padding: 10px;
+        }
+        .btn-action {
+            margin-left: 5px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        .empty-state i {
+            font-size: 5rem;
+            color: var(--secondary-color);
+            margin-bottom: 20px;
+        }
+        .btn-primary-custom {
+            background: linear-gradient(135deg, var(--primary-color), #e66a20);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: white;
+        }
+        .btn-primary-custom:hover {
+            background: linear-gradient(135deg, #e66a20, var(--primary-color));
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="header text-center">
+        <!-- زر العودة للصفحة الرئيسية -->
+        <a href="{% url 'accounts:pharmacy_dashboard' %}" class="home-btn btn btn-light btn-sm">
+            <i class="bi bi-house-fill"></i> الرئيسية
+        </a>
+        
+        <div class="container">
+            <h1><i class="bi bi-shield-check"></i> شركات التأمين المتعاقد معها</h1>
+            <p class="lead">إدارة شركات التأمين المرتبطة بصيدليتك</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="{% url 'coverage:insurance-create' %}" class="btn btn-primary-custom">
+                <i class="bi bi-plus-circle"></i> إضافة تأمين جديد
+            </a>
+            <span class="badge bg-info">عدد شركات التأمين: {{ insurances|length }}</span>
+        </div>
+
+        {% if insurances %}
+        <div class="row">
+            {% for insurance in insurances %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card insurance-card">
+                    <div class="text-center p-3">
+                        {% if insurance.insurance.image %}
+                        <img src="{{ insurance.insurance.image.url }}" class="card-img-top insurance-img" alt="{{ insurance.insurance.name }}">
+                        {% else %}
+                        <div class="insurance-img d-flex align-items-center justify-content-center">
+                            <i class="bi bi-building text-secondary" style="font-size: 3rem;"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ insurance.insurance.name }}</h5>
+                        <p class="card-text">مرتبط بـ: {{ insurance.pharmacy.name }}</p>
+                        
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'coverage:insurance-detail' insurance.pk %}" class="btn btn-outline-info btn-action">
+                                <i class="bi bi-eye"></i> تفاصيل
+                            </a>
+                            <a href="{% url 'coverage:insurance-update' insurance.pk %}" class="btn btn-outline-primary btn-action">
+                                <i class="bi bi-pencil"></i> تعديل
+                            </a>
+                            <a href="{% url 'coverage:insurance-delete' insurance.pk %}" class="btn btn-outline-danger btn-action">
+                                <i class="bi bi-trash"></i> حذف
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-shield-x"></i>
+            <h3>لا توجد شركات تأمين مضافة</h3>
+            <p class="text-muted">لم تقم بإضافة أي شركات تأمين بعد. ابدأ بإضافة أول شركة تأمين.</p>
+            <a href="{% url 'coverage:insurance-create' %}" class="btn btn-primary-custom mt-3">
+                <i class="bi bi-plus-circle"></i> إضافة أول تأمين
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

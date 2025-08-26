@@ -1,0 +1,249 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم صيدليات Orange</title>
+    <style>
+        :root {
+            --primary: #FF7A30;
+            --primary-dark: #e66a20;
+            --secondary: #465C88;
+            --secondary-dark: #3a4c72;
+            --light-bg: #E9E3DF;
+            --dark-text: #000000;
+            --light-text: #5a5a5a;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            direction: rtl;
+            background-color: var(--light-bg);
+            padding: 20px;
+            line-height: 1.6;
+            color: var(--dark-text);
+        }
+
+        .dashboard-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            max-width: 1000px;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 10px;
+        }
+
+        .logo img {
+            max-height: 90px;
+            transition: var(--transition);
+        }
+
+        .logo img:hover {
+            transform: scale(1.05);
+        }
+
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--secondary);
+            border-radius: 3px;
+        }
+
+        .info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border-right: 4px solid var(--primary);
+        }
+
+        .info p {
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .info p::before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: 5px;
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 35px;
+        }
+
+        .button-grid a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 20px 15px;
+            text-align: center;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            min-height: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button-grid a:nth-child(even) {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+        }
+
+        .button-grid a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-100%);
+            transition: transform 0.4s ease;
+        }
+
+        .button-grid a:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .button-grid a:hover::before {
+            transform: translateX(0);
+        }
+
+        .button-grid a i {
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        /* رموز بديلة باستخدام Unicode إذا لم تتوفر أيقونات */
+        .button-grid a::first-letter {
+            font-size: 1.5em;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 20px;
+            }
+            
+            .button-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                gap: 15px;
+            }
+            
+            .button-grid a {
+                padding: 15px 10px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .dashboard-container {
+                padding: 15px;
+            }
+            
+            .button-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .logo img {
+                max-height: 70px;
+            }
+        }
+
+        .welcome-message {
+            text-align: center;
+            color: var(--light-text);
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="logo">
+            <img src="{% static 'images/logo.jpg' %}" alt="شعار صيدليات Orange">
+        </div>
+
+        <p class="welcome-message">أهلاً بك في نظام إدارة اورنج</p>
+        <h1>{{ pharmacy_name }}</h1>
+
+        <div class="info">
+            <p>رقم الهاتف: {{ phone_number }}</p>
+            <p>العنوان: {{ pharmacy_address }}</p>
+            <p>رقم الترخيص: {{ pharmacy_license_number }}</p>
+        </div>
+
+        <div class="button-grid">
+            <a href="{% url 'store:stock_list' %}">إدارة المخزون</a>
+            <a href="{% url 'offer:offer-list' %}">إدارة العروض</a>
+            <a href="{% url 'coverage:insurance-list' %}">شركات التأمين</a>
+            <a href="{% url 'coverage:delivery-areas' %}">مناطق التوصيل</a>
+            <a href="#">العملاء</a>
+            <a href="#">الطلبات</a>
+        </div>
+    </div>
+</body>
+</html>

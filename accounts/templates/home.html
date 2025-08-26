@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام إدارة الصيدليات</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #2c7fb8;
+            margin-bottom: 10px;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .option-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .option-card:hover {
+            transform: translateY(-5px);
+        }
+        .option-card h2 {
+            color: #2c7fb8;
+            margin-bottom: 15px;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #2c7fb8;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #1c5a8a;
+        }
+        @media (max-width: 768px) {
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>مرحباً بك في نظام إدارة الصيدليات</h1>
+            <p>اختر الخدمة التي تريدها من القائمة أدناه</p>
+        </div>
+        
+        <div class="options">
+            <div class="option-card">
+                <h2>تسجيل الدخول</h2>
+                <p>لديك حساب بالفعل؟ سجل الدخول إلى النظام</p>
+                <a href="{% url 'login' %}" class="btn">تسجيل الدخول</a>
+            </div>
+            
+            <div class="option-card">
+                <h2>تسجيل صيدلية جديدة</h2>
+                <p>انضم إلى نظامنا كصيدلية جديدة</p>
+                <a href="{% url 'accounts:pharmacy_register' %}" class="btn">تسجيل صيدلية</a>
+            </div>
+            
+            <div class="option-card">
+                <h2>عن النظام</h2>
+                <p>تعرف أكثر على خدمات نظام إدارة الصيدليات</p>
+                <a href="#" class="btn">المزيد</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

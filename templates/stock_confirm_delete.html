@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="logo">
+        <img src="{% static 'images/logo.jpg' %}" alt="شعار صيدليات Orange">
+    </div>
+
+    <p class="welcome-message">تأكيد عملية الحذف</p>
+    <h1>إدارة المخزون - {{ pharmacy_name }}</h1>
+
+    <div class="confirmation-container">
+        <div class="confirmation-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        
+        <h2>تأكيد الحذف</h2>
+        <p class="confirmation-message">هل أنت متأكد من أنك تريد حذف "<strong>{{ object }}</strong>"؟</p>
+        <p class="confirmation-warning">هذه العملية لا يمكن التراجع عنها.</p>
+
+        <form method="post" class="confirmation-form">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="submit" class="btn danger">
+                    <i class="fas fa-trash"></i> نعم، احذف
+                </button>
+                <a href="{% url 'store:stock_list' %}" class="btn secondary">
+                    <i class="fas fa-times"></i> إلغاء
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary: #FF7A30;
+        --primary-dark: #e66a20;
+        --secondary: #465C88;
+        --secondary-dark: #3a4c72;
+        --light-bg: #E9E3DF;
+        --dark-text: #000000;
+        --light-text: #5a5a5a;
+        --success: #28a745;
+        --warning: #ffc107;
+        --danger: #dc3545;
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+    }
+    
+    .dashboard-container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        max-width: 600px;
+        margin: 20px auto;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dashboard-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+
+    .logo {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .logo img {
+        max-height: 80px;
+    }
+
+    .welcome-message {
+        text-align: center;
+        color: var(--light-text);
+        margin-bottom: 5px;
+        font-size: 16px;
+    }
+
+    h1 {
+        color: var(--primary);
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    h1::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 50%;
+        transform: translateX(50%);
+        width: 80px;
+        height: 3px;
+        background-color: var(--secondary);
+        border-radius: 3px;
+    }
+
+    .confirmation-container {
+        text-align: center;
+        padding: 30px 20px;
+        background: #f8f9fa;
+        border-radius: 10px;
+    }
+
+    .confirmation-icon {
+        font-size: 60px;
+        color: var(--warning);
+        margin-bottom: 20px;
+    }
+
+    .confirmation-container h2 {
+        color: var(--danger);
+        margin-bottom: 15px;
+        font-size: 24px;
+    }
+
+    .confirmation-message {
+        font-size: 18px;
+        margin-bottom: 10px;
+        color: var(--dark-text);
+    }
+
+    .confirmation-warning {
+        color: var(--danger);
+        font-weight: bold;
+        margin-bottom: 30px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 30px;
+    }
+
+    .btn {
+        padding: 12px 25px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn.danger {
+        background: linear-gradient(135deg, var(--danger) 0%, #c82333 100%);
+        color: white;
+    }
+
+    .btn.secondary {
+        background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+        color: white;
+    }
+
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* التكيف مع الشاشات المختلفة */
+    @media (max-width: 768px) {
+        .dashboard-container {
+            padding: 20px;
+        }
+        
+        .form-actions {
+            flex-direction: column;
+        }
+        
+        .btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .dashboard-container {
+            padding: 15px;
+        }
+        
+        h1 {
+            font-size: 24px;
+        }
+        
+        .logo img {
+            max-height: 60px;
+        }
+        
+        .confirmation-message {
+            font-size: 16px;
+        }
+    }
+</style>
+{% endblock %}

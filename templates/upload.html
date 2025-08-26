@@ -1,0 +1,409 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="logo">
+        <img src="{% static 'images/logo.jpg' %}" alt="شعار صيدليات Orange">
+    </div>
+
+    <p class="welcome-message">تحميل ملف المخزون</p>
+    <h1>إدارة المخزون - {{ pharmacy_name }}</h1>
+
+    <div class="upload-container">
+        <!-- زر تحميل القالب -->
+        <div class="template-download">
+            <a href="{% url 'store:download_excel_template' %}" class="download-btn">
+                <i class="fas fa-download"></i> تحميل قالب Excel
+            </a>
+        </div>
+
+        <!-- رسائل الخطأ -->
+        {% if error %}
+            <div class="error-alert">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <!-- نموذج رفع الملف -->
+        <form method="post" enctype="multipart/form-data" class="upload-form">
+            {% csrf_token %}
+            
+            <!-- حقل رفع الملف -->
+            <div class="file-upload-area" id="fileUploadArea">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <input type="file" id="fileInput" name="excel_file" accept=".xlsx,.xls" hidden>
+                <label for="fileInput" class="file-label">
+                    <span class="browse-text">اختر ملف Excel</span>
+                    أو اسحب وأفلت الملف هنا
+                </label>
+                <p class="file-info">XLSX, XLS حتى 10MB</p>
+                <div class="selected-file" id="selectedFile" style="display: none;">
+                    <i class="fas fa-file-excel"></i>
+                    <span id="fileName"></span>
+                    <button type="button" id="removeFile" class="remove-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- زر الإرسال -->
+            <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                <i class="fas fa-upload"></i> رفع الملف
+            </button>
+        </form>
+
+        <!-- معلومات إضافية -->
+        <div class="upload-info">
+            <h3>ملاحظات مهمة:</h3>
+            <ul>
+                <li>يجب أن يكون الملف بصيغة Excel (xlsx أو xls)</li>
+                <li>تأكد من أن البيانات مطابقة للقالب الذي تم تحميله</li>
+                <li>الحد الأقصى لحجم الملف هو 10 ميجابايت</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --primary: #FF7A30;
+        --primary-dark: #e66a20;
+        --secondary: #465C88;
+        --secondary-dark: #3a4c72;
+        --light-bg: #E9E3DF;
+        --dark-text: #000000;
+        --light-text: #5a5a5a;
+        --success: #28a745;
+        --warning: #ffc107;
+        --danger: #dc3545;
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+    }
+    
+    .dashboard-container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        max-width: 600px;
+        margin: 20px auto;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dashboard-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+
+    .logo {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .logo img {
+        max-height: 80px;
+    }
+
+    .welcome-message {
+        text-align: center;
+        color: var(--light-text);
+        margin-bottom: 5px;
+        font-size: 16px;
+    }
+
+    h1 {
+        color: var(--primary);
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    h1::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        right: 50%;
+        transform: translateX(50%);
+        width: 80px;
+        height: 3px;
+        background-color: var(--secondary);
+        border-radius: 3px;
+    }
+
+    .upload-container {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 10px;
+    }
+
+    .template-download {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .download-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 20px;
+        background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: bold;
+        transition: var(--transition);
+    }
+
+    .download-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .error-alert {
+        background-color: #ffebee;
+        color: var(--danger);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-left: 4px solid var(--danger);
+    }
+
+    .upload-form {
+        margin-bottom: 25px;
+    }
+
+    .file-upload-area {
+        border: 2px dashed #ddd;
+        border-radius: 10px;
+        padding: 30px 20px;
+        text-align: center;
+        margin-bottom: 20px;
+        transition: var(--transition);
+        position: relative;
+    }
+
+    .file-upload-area:hover {
+        border-color: var(--primary);
+    }
+
+    .file-upload-area.drag-over {
+        border-color: var(--primary);
+        background-color: rgba(255, 122, 48, 0.05);
+    }
+
+    .upload-icon {
+        font-size: 50px;
+        color: var(--primary);
+        margin-bottom: 15px;
+    }
+
+    .file-label {
+        display: block;
+        margin-bottom: 10px;
+        color: var(--light-text);
+        cursor: pointer;
+    }
+
+    .browse-text {
+        color: var(--primary);
+        font-weight: bold;
+    }
+
+    .file-info {
+        font-size: 12px;
+        color: var(--light-text);
+        margin-bottom: 15px;
+    }
+
+    .selected-file {
+        background: white;
+        padding: 12px 15px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 15px;
+        box-shadow: var(--shadow);
+    }
+
+    .selected-file i {
+        color: var(--success);
+        font-size: 20px;
+    }
+
+    .remove-btn {
+        background: none;
+        border: none;
+        color: var(--danger);
+        cursor: pointer;
+        margin-right: auto;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, var(--success) 0%, #218838 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: var(--transition);
+        cursor: pointer;
+    }
+
+    .submit-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+    }
+
+    .submit-btn:not(:disabled):hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .upload-info {
+        border-top: 1px solid #ddd;
+        padding-top: 20px;
+    }
+
+    .upload-info h3 {
+        color: var(--secondary);
+        margin-bottom: 10px;
+        font-size: 16px;
+    }
+
+    .upload-info ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .upload-info li {
+        padding: 5px 0;
+        color: var(--light-text);
+        position: relative;
+        padding-right: 15px;
+    }
+
+    .upload-info li::before {
+        content: "•";
+        color: var(--primary);
+        font-weight: bold;
+        position: absolute;
+        right: 0;
+    }
+
+    /* التكيف مع الشاشات المختلفة */
+    @media (max-width: 768px) {
+        .dashboard-container {
+            padding: 20px;
+        }
+        
+        .upload-container {
+            padding: 20px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .dashboard-container {
+            padding: 15px;
+        }
+        
+        h1 {
+            font-size: 24px;
+        }
+        
+        .logo img {
+            max-height: 60px;
+        }
+        
+        .file-upload-area {
+            padding: 20px 15px;
+        }
+        
+        .upload-icon {
+            font-size: 40px;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInput = document.getElementById('fileInput');
+    const fileUploadArea = document.getElementById('fileUploadArea');
+    const selectedFile = document.getElementById('selectedFile');
+    const fileName = document.getElementById('fileName');
+    const removeFileBtn = document.getElementById('removeFile');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    // التعامل مع سحب وإفلات الملفات
+    fileUploadArea.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        fileUploadArea.classList.add('drag-over');
+    });
+    
+    fileUploadArea.addEventListener('dragleave', function() {
+        fileUploadArea.classList.remove('drag-over');
+    });
+    
+    fileUploadArea.addEventListener('drop', function(e) {
+        e.preventDefault();
+        fileUploadArea.classList.remove('drag-over');
+        
+        if (e.dataTransfer.files.length) {
+            handleFileSelection(e.dataTransfer.files[0]);
+        }
+    });
+    
+    // التعامل مع اختيار الملف عبر الزر
+    fileInput.addEventListener('change', function() {
+        if (this.files.length) {
+            handleFileSelection(this.files[0]);
+        }
+    });
+    
+    // إزالة الملف المحدد
+    removeFileBtn.addEventListener('click', function() {
+        fileInput.value = '';
+        selectedFile.style.display = 'none';
+        submitBtn.disabled = true;
+    });
+    
+    // معالجة الملف المحدد
+    function handleFileSelection(file) {
+        if (file) {
+            const validTypes = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+            const extension = file.name.split('.').pop().toLowerCase();
+            
+            if (validTypes.includes(file.type) || ['xls', 'xlsx'].includes(extension)) {
+                fileName.textContent = file.name;
+                selectedFile.style.display = 'flex';
+                submitBtn.disabled = false;
+            } else {
+                alert('الرجاء اختيار ملف Excel صالح (xlsx أو xls)');
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

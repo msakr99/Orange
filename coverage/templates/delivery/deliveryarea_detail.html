@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<style>
+    .delete-card {
+        background-color: white;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    
+    .alert-warning {
+        background-color: #fff3cd;
+        border-color: #ffeaa7;
+        color: #856404;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    .btn-secondary {
+        background-color: #465C88;
+        border-color: #465C88;
+    }
+</style>
+
+<div class="delete-card">
+    <h2 class="text-center mb-4">{% trans "تأكيد الحذف" %}</h2>
+    
+    <div class="alert alert-warning">
+        <h5>{% trans "تحذير!" %}</h5>
+        <p>{% trans "هل أنت متأكد من أنك تريد حذف منطقة التوصيل هذه؟" %}</p>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5>{% trans "تفاصيل منطقة التوصيل" %}</h5>
+            <p><strong>{% trans "الصيدلية:" %}</strong> {{ object.pharmacy }}</p>
+            <p><strong>{% trans "القرية:" %}</strong> {{ object.village }}</p>
+            <p><strong>{% trans "قيمة التوصيل:" %}</strong> {{ object.delivery_fee }} {% trans "جنيه" %}</p>
+        </div>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        <div class="d-flex justify-content-center gap-3">
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash"></i> {% trans "نعم، احذف" %}
+            </button>
+            <a href="{% url 'coverage:delivery-areas' %}" class="btn-cancel">
+                <i class="fas fa-times me-2"></i>{% trans "إلغاء" %}
+            </a>
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

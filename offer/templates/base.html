@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}لوحة العروض{% endblock %}</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            direction: rtl;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+        h2 { color: #333; }
+        a { margin-left: 10px; }
+    </style>
+</head>
+<body>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
